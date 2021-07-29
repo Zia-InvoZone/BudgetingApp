@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "zia-invozone",
+    "password": null,
+    "database": "BudgetingApp",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "zia-invozone",
+    "password": null,
+    "database": "BudgetingApp",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "zia-invozone",
+    "password": null,
+    "database": "BudgetingApp",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
