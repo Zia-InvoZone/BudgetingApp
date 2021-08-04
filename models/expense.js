@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       amount: DataTypes.STRING,
       description: DataTypes.STRING,
-      created_by: DataTypes.STRING
+      created_by: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: 'expenses'
+      modelName: 'expenses',
     }
   );
   return Expense;

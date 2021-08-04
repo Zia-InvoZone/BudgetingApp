@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Group.init(
     {
-      name: DataTypes.STRING
+      name: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: 'Groups'
+      modelName: 'Groups',
     }
   );
   return Group;
