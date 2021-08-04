@@ -1,7 +1,7 @@
 {
   "development": {
-    "username": "zia-invozone",
-    "password": null,
+    "username": "invozone",
+    "password": 12345678,
     "database": "BudgetingApp",
     "host": "127.0.0.1",
     "dialect": "postgres"
