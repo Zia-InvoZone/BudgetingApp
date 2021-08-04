@@ -1,19 +1,20 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "prettier",
-        "airbnb-base"
-    ],
-    "plugins": [
-        "prettier"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 12
-    },
-    "rules": {
-        "prettier/prettier": "error"
-    }
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["prettier", "eslint:recommended", "airbnb-base"],
+  "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "trailingComma": "es5",
+    "prettier/prettier": [
+      "error",
+      { "singleQuote": true, "trailingComma": "es5" }
+    ]
+  }
 }
