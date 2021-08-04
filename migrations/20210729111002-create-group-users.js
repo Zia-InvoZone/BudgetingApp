@@ -1,7 +1,6 @@
-'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Group_Users', {
+    await queryInterface.createTable('group_user', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,17 +13,17 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Group_Users');
+  down: async (queryInterface) => {
+    await queryInterface.dropTable('group_user');
   }
 };
