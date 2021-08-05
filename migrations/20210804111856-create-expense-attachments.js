@@ -1,28 +1,21 @@
+'use strict';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('expense_attachments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.STRING,
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-        isEmail: true,
-      },
-      password: {
+      file: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      image: {
-        type: Sequelize.STRING,
-        allowNull: true,
+      expense_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       created_at: {
         allowNull: false,
@@ -34,7 +27,13 @@ module.exports = {
       },
     });
   },
-  down: async (queryInterface) => {
-    await queryInterface.dropTable('users');
+
+  down: async (queryInterface, Sequelize) => {
+    /**
+     * Add reverting commands here.
+     *
+     * Example:
+     * await queryInterface.dropTable('users');
+     */
   },
 };
