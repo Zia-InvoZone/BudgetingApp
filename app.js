@@ -8,6 +8,7 @@ app.get('/', (req, res) => {
   return res.send('welcome');
 });
 app.get('/add-user', (req, res) => {
+  var test = { 'name': 'test' };
   // sample user testing for insertion
   return User.create({
     name: 'test ',
