@@ -1,13 +1,13 @@
 const router = require('express').Router();
 const { Op } = require('sequelize');
-const DB = require('../models').user;
+const DB = require('../models').group;
 /**
  * @swagger
  * components:
  *  schemas:
- *    User:
+ *    Group:
  *      type: object
- *      requried: -name -email -passwrod
+ *      requried: -name
  *      properties:
  *        id:
  *          type: number
@@ -15,75 +15,61 @@ const DB = require('../models').user;
  *        name:
  *          type: string
  *          description: Name
- *        email:
- *          type: string
- *          description: Email
- *        password:
- *          type: string
- *          description: some password
  *      example:
- *        name: dev
- *        email: dev@example.com
- *        password: secret
+ *        name: General
  *
  */
 
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: The users managing API
+ *   name: Groups
+ *   description: The groups managing API
  */
 
 /**
  * @swagger
- * /users:
+ * /groups:
  *   get:
- *     summary: Returns the list of all the users
+ *     summary: Returns the list of all the groups
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: The list of the users
+ *         description: The list of the groups
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/Group'
  */
 router.get('/', async (req, res) => res.json(await DB.findAll()));
 /**
  * @swagger
- * /users:
+ * /groups:
  *   post:
- *     summary: Create a new user
- *     tags: [Users]
+ *     summary: Create a new group
+ *     tags: [Groups]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/Group'
  *     responses:
  *       200:
- *         description: The user was successfully created
+ *         description: The group was successfully created
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Group'
  *       500:
  *         description: Server Error
  */
 router.post('/', async (req, res) => {
   try {
     let data = req.body;
-    res.json(
-      await DB.create({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      })
-    );
+    res.json(await DB.create({ name: data.name }));
   } catch (error) {
     return res.status('500').send('Server Error');
   }
@@ -91,31 +77,31 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /users/{id}:
+ * /groups/{id}:
  *   get:
- *     summary: Get the user by id
- *     tags: [Users]
+ *     summary: Get the group by id
+ *     tags: [Groups]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: The user id
+ *         description: The group id
  *     responses:
  *       200:
- *         description: The user description by id
+ *         description: The group description by id
  *         contens:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/Group'
  *       404:
- *         description: The user was not found
+ *         description: The group was not found
  */
 router.get('/:id', async (req, res) => {
   try {
-    const user = await DB.findByPk(req.params.id);
-    if (user) return res.json(user);
+    const result = await DB.findByPk(req.params.id);
+    if (result) return res.json(result);
     else return res.status(404).send('Not Found');
   } catch (error) {
     return res.status(500).send('Server Error');
@@ -123,32 +109,32 @@ router.get('/:id', async (req, res) => {
 });
 /**
  * @swagger
- * /users/{id}:
+ * /groups/{id}:
  *  put:
- *    summary: Update the user by the id
- *    tags: [Users]
+ *    summary: Update the group by the id
+ *    tags: [Groups]
  *    parameters:
  *      - in: path
  *        name: id
  *        schema:
  *          type: string
  *        required: true
- *        description: The user id
+ *        description: The group id
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            $ref: '#/components/schemas/User'
+ *            $ref: '#/components/schemas/Group'
  *    responses:
  *      200:
- *        description: The user was updated
+ *        description: The group was updated
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/User'
+ *              $ref: '#/components/schemas/Group'
  *      404:
- *        description: The user was not found
+ *        description: The group was not found
  *      500:
  *        description: Some error happened
  */
@@ -157,10 +143,7 @@ router.put('/:id', async (req, res) => {
   try {
     let data = req.body;
     const id = req.params.id;
-    const [result] = await DB.update(
-      { name: data.name, email: data.email },
-      { where: { id } }
-    );
+    const [result] = await DB.update({ name: data.name }, { where: { id } });
     return res.json({ updated: result });
   } catch (error) {
     return res.status(500).send('Server Error');
@@ -168,10 +151,10 @@ router.put('/:id', async (req, res) => {
 });
 /**
  * @swagger
- * /users/{id}:
+ * /groups/{id}:
  *   delete:
- *     summary: Remove the user by id
- *     tags: [Users]
+ *     summary: Remove the group by id
+ *     tags: [Groups]
  *     parameters:
  *       - in: path
  *         name: id
@@ -182,9 +165,9 @@ router.put('/:id', async (req, res) => {
  *
  *     responses:
  *       200:
- *         description: The user was deleted
+ *         description: The group was deleted
  *       404:
- *         description: The user was not found
+ *         description: The group was not found
  */
 
 router.delete('/:id', async (req, res) => {
