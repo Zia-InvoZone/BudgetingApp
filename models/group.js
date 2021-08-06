@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Groups',
+      modelName: 'group',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
     }
   );
   return Group;
