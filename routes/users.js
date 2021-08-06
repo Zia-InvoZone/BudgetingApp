@@ -11,7 +11,7 @@ const DB = require('../models').user;
  *      properties:
  *        id:
  *          type: number
- *          description: Auto gen id
+ *          description: Auto generarted id
  *        name:
  *          type: string
  *          description: Name
@@ -24,9 +24,10 @@ const DB = require('../models').user;
  *      example:
  *        name: dev
  *        email: dev@example.com
- *        password: 12761872638126812
+ *        password: secret
  *
  */
+
 /**
  * @swagger
  * tags:
@@ -50,7 +51,7 @@ const DB = require('../models').user;
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-
+router.get('/', async (req, res) => res.json(await DB.findAll()));
 /**
  * @swagger
  * /users:
@@ -71,19 +72,21 @@ const DB = require('../models').user;
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       500:
- *         description: Some server error
+ *         description: Server Error
  */
-
-router.get('/', async (req, res) => res.json(await DB.findAll()));
 router.post('/', async (req, res) => {
-  let data = req.body;
-  res.json(
-    await DB.create({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    })
-  );
+  try {
+    let data = req.body;
+    res.json(
+      await DB.create({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+    );
+  } catch (error) {
+    return res.status('500').send('Server Error');
+  }
 });
 
 /**
@@ -109,7 +112,15 @@ router.post('/', async (req, res) => {
  *       404:
  *         description: The user was not found
  */
-
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await DB.findByPk(req.params.id);
+    if (user) return res.json(user);
+    else return res.status(404).send('Not Found');
+  } catch (error) {
+    return res.status(500).send('Server Error');
+  }
+});
 /**
  * @swagger
  * /users/{id}:
@@ -142,6 +153,19 @@ router.post('/', async (req, res) => {
  *        description: Some error happened
  */
 
+router.put('/:id', async (req, res) => {
+  try {
+    let data = req.body;
+    const id = req.params.id;
+    const [result] = await DB.update(
+      { name: data.name, email: data.email },
+      { where: { id } }
+    );
+    return res.json({ updated: result });
+  } catch (error) {
+    return res.status(500).send('Server Error');
+  }
+});
 /**
  * @swagger
  * /users/{id}:
@@ -163,36 +187,16 @@ router.post('/', async (req, res) => {
  *         description: The user was not found
  */
 
-router.get('/:id', async (req, res) =>
-  res.json(
-    await DB.findAll({
-      where: {
-        [Op.eq]: req.params.id,
-      },
-    })
-  )
-);
-router.put('/:id', async (req, res) => {
-  let data = req.body;
-  res.json(
-    await DB.update(
-      { name: data.name, email: data.email },
-      {
-        where: {
-          [Op.eq]: req.params.id,
-        },
-      }
-    )
-  );
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await DB.destroy({
+      where: { id },
+    });
+    return res.status(200).json({ deleted: result });
+  } catch (error) {
+    return res.status(500).send('Some server error');
+  }
 });
-router.delete('/:id', async (req, res) =>
-  res.json(
-    await User.destroy({
-      where: {
-        [Op.eq]: req.params.id,
-      },
-    })
-  )
-);
 
 module.exports = router;
