@@ -32,7 +32,7 @@ const DB = require('../models').group;
  * /groups:
  *   get:
  *     summary: Returns the list of all the groups
- *     tags: [Users]
+ *     tags: [Groups]
  *     responses:
  *       200:
  *         description: The list of the groups
