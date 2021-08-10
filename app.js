@@ -2,9 +2,17 @@ require('dotenv').config();
 const port = process.env.PORT;
 const express = require('express');
 const app = express();
+const User = require('./models').users;
 
-app.get('/', (req, res) => {
-  res.send('2nd test!');
+app.get('/', async (req, res) => {
+  // const user = await users.create({
+  //   name: 'test',
+  //   email: 'test@gmail.com',
+  //   password: '123',
+  // });
+  const users = await User.findAll();
+
+  res.send(users);
 });
 
 app.listen(port, () => {
