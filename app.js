@@ -2,18 +2,13 @@ require('dotenv').config();
 const port = process.env.PORT;
 const express = require('express');
 const app = express();
-const User = require('./models').users;
+const usersRouter = require('./routes/users');
+const groupsRouter = require('./routes/groups');
+const expensesRouter = require('./routes/expenses');
 
-app.get('/', async (req, res) => {
-  // const user = await users.create({
-  //   name: 'test',
-  //   email: 'test@gmail.com',
-  //   password: '123',
-  // });
-  const users = await User.findAll();
-
-  res.send(users);
-});
+app.use('/users', usersRouter);
+app.use('/groups', groupsRouter);
+app.use('/expenses', expensesRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
