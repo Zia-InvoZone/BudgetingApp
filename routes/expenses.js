@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-const DB = require('../models').expenses;
+const expenseController = require('../controllers/expenseController');
+app.use(express.urlencoded());
+app.use(express.json());
 
 /**
  * @swagger
@@ -64,23 +66,7 @@ const DB = require('../models').expenses;
  *        description: Some server error
  */
 
-app.use(express.urlencoded());
-app.use(express.json());
-app.post('/', async (req, res) => {
-  try {
-    const Data = req.body;
-    const expense = await DB.create({
-      type: Data.type,
-      amount: Data.amount,
-      description: Data.description,
-      created_by: Data.created_by,
-    });
-    return res.json(expense);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
-  }
-});
+app.post('/', expenseController.create);
 
 /**
  * @swagger
@@ -98,14 +84,7 @@ app.post('/', async (req, res) => {
  *              $ref: '#/components/schemas/Expense'
  */
 
-app.get('/', async (req, res) => {
-  try {
-    const expenses = await DB.findAll();
-    return res.send(expenses);
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+app.get('/', expenseController.findAll);
 
 /**
  * @swagger
@@ -132,18 +111,7 @@ app.get('/', async (req, res) => {
  *        description: Expense not found
  */
 
-app.get('/:id', async (req, res) => {
-  const expenses = await DB.findAll({
-    where: {
-      id: req.params.id,
-    },
-  });
-  if (expenses.length) {
-    return res.send(expenses);
-  } else {
-    return res.status(404).send('Not Found');
-  }
-});
+app.get('/:id', expenseController.show);
 
 /**
  * @swagger
@@ -178,27 +146,7 @@ app.get('/:id', async (req, res) => {
  *        description: Server Error
  */
 
-app.put('/:id', async (req, res) => {
-  try {
-    const Data = req.body;
-    const result = await DB.update(
-      {
-        type: Data.type,
-        amount: Data.amount,
-        description: Data.description,
-        created_by: Data.created_by,
-      },
-      {
-        where: {
-          id: req.params.id,
-        },
-      }
-    );
-    return res.send({ updated: result });
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+app.put('/:id', expenseController.update);
 
 /**
  * @swagger
@@ -220,13 +168,6 @@ app.put('/:id', async (req, res) => {
  *        description: Expense not found
  */
 
-app.delete('/:id', async (req, res) => {
-  const result = await DB.destroy({
-    where: {
-      id: req.params.id,
-    },
-  });
-  return res.send({ deleted: result });
-});
+app.delete('/:id', expenseController.delete);
 
 module.exports = app;

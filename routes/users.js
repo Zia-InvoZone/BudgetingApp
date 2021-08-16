@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
-const DB = require('../models').users;
-
+const userController = require('../controllers/userController');
+app.use(express.urlencoded());
+app.use(express.json());
 /**
  * @swagger
  * components:
@@ -61,22 +62,7 @@ const DB = require('../models').users;
  *        description: Some server error
  */
 
-app.use(express.urlencoded());
-app.use(express.json());
-app.post('/', async (req, res) => {
-  try {
-    const Data = req.body;
-    const user = await DB.create({
-      name: Data.name,
-      email: Data.email,
-      password: Data.password,
-    });
-    return res.json(user);
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
-  }
-});
+app.post('/', userController.create);
 
 /**
  * @swagger
@@ -94,14 +80,7 @@ app.post('/', async (req, res) => {
  *              $ref: '#/components/schemas/User'
  */
 
-app.get('/', async (req, res) => {
-  try {
-    const users = await DB.findAll();
-    return res.send(users);
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+app.get('/', userController.findAll);
 
 /**
  * @swagger
@@ -128,19 +107,7 @@ app.get('/', async (req, res) => {
  *        description: User not found
  */
 
-app.get('/:id', async (req, res) => {
-  const user = await DB.findAll({
-    where: {
-      id: req.params.id,
-    },
-  });
-
-  if (user.length) {
-    return res.json(user);
-  } else {
-    return res.status(404).send('Not Found');
-  }
-});
+app.get('/:id', userController.show);
 
 /**
  * @swagger
@@ -175,25 +142,7 @@ app.get('/:id', async (req, res) => {
  *        description: Server Error
  */
 
-app.put('/:id', async (req, res) => {
-  try {
-    const result = await DB.update(
-      {
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-      },
-      {
-        where: {
-          id: req.params.id,
-        },
-      }
-    );
-    return res.send({ updated: result });
-  } catch (err) {
-    return res.status(500).send(err);
-  }
-});
+app.put('/:id', userController.update);
 
 /**
  * @swagger
@@ -215,13 +164,6 @@ app.put('/:id', async (req, res) => {
  *        description: User not found
  */
 
-app.delete('/:id', async (req, res) => {
-  const result = await DB.destroy({
-    where: {
-      id: req.params.id,
-    },
-  });
-  return res.send({ deleted: result });
-});
+app.delete('/:id', userController.delete);
 
 module.exports = app;
